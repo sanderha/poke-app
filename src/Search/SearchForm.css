@@ -1,0 +1,31 @@
+.searchform {
+    margin-bottom: 2rem;
+    max-width: 320px;
+    margin: 0 auto;
+}
+
+.searchform__button {
+    margin-left: 1rem;
+}
+
+.searchform__feedback {
+    margin: .5rem 0;
+}
+
+.searchform__input-wrap {
+    position: relative;
+}
+
+.searchform .searchform-suggestions {
+    position: absolute;
+    left: 0;
+    top: 100%;
+    width: 100%;
+    background: #fff;
+    box-shadow: 0 2px 2px #ccc;
+}
+
+.searchform__inner {
+    display: flex;
+    align-items: center;
+}

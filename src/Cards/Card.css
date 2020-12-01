@@ -1,0 +1,8 @@
+.poke-card {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.poke-card__img {
+    max-width: 300px;
+}
