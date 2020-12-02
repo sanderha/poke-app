@@ -14,7 +14,7 @@ export default function App() {
     const [searchTerm, setSearchTerm] = useState('');
     const { searchResult, searchError } = useSearch(searchTerm);
     const [snackBarNotice, setSnackBarNotice] = useState({ active: false, message: '', type: 'error' });
-    // TODO create suggestions dropdown and handle errors
+    // TODO handle errors
     const { searchSuggestions } = useSearchSuggestions();
 
     useEffect(() => {
