@@ -4,9 +4,7 @@ import '@rmwc/list/styles';
 
 export default function SearchFormSuggestions({ suggestions, submitMethod, selectedSuggestion }) {
 
-    const handleClick = e => {
-        submitMethod(e.target.innerText);
-    }
+    const handleClick = e => submitMethod(e.target.innerText);
 
     const isSelected = (value) => {
         const selected = selectedSuggestion || '';

@@ -3,6 +3,7 @@ import { Button } from '@rmwc/button';
 import { TextField } from '@rmwc/textfield';
 import SearchFormSuggestions from './SearchFormSuggestions';
 import { traverseFlatList, DOWN, UP } from '../functions/lists';
+import useSearchFormSuggestions from '../hooks/useSearchFormSuggestions';
 
 import './SearchForm.css';
 import '@rmwc/textfield/dist/styles';
@@ -12,9 +13,7 @@ function SearchForm({ searchMethod, searchSuggestions }) {
     const [inputValue, setInputValue] = useState('');
     const [searchedValue, setSearchedValue] = useState('');
     const [feedBack, setFeedBack] = useState('');
-    const [selectedSuggestion, setSelectedSuggestion] = useState(null);
-    const [showSuggestions, setShowSuggestions] = useState(false);
-    const [activeSuggestions, setActiveSuggestions] = useState([]);
+    const { selectedSuggestion, setSelectedSuggestion, showSuggestions, setShowSuggestions, activeSuggestions, setActiveSuggestions } = useSearchFormSuggestions(searchSuggestions);
 
     // filter visible search suggestions on input change
     useEffect(() => {
@@ -24,13 +23,13 @@ function SearchForm({ searchMethod, searchSuggestions }) {
         }
 
         return () => setActiveSuggestions([]);
-    }, [inputValue, searchSuggestions]);
+    }, [inputValue, searchSuggestions, setActiveSuggestions]);
 
     // reset selected search suggestion
     useEffect(() => {
         setSelectedSuggestion(null);
         return () => setSelectedSuggestion(null);
-    }, [searchedValue, inputValue]);
+    }, [searchedValue, inputValue, setSelectedSuggestion]);
 
     // Figure out whether to show search suggestions dropdown or not
     useEffect(() => {
@@ -41,14 +40,17 @@ function SearchForm({ searchMethod, searchSuggestions }) {
         }
 
         return () => setShowSuggestions(false);
-    }, [inputValue, searchedValue, activeSuggestions]);
+    }, [inputValue, searchedValue, activeSuggestions, setShowSuggestions]);
 
-    const handleInputChange = (e) => setInputValue(e.target.value);
+    // Set feedback message
+    useEffect(() => {
+        if (searchedValue) setFeedBack(makeFeedBackMessage(searchedValue));
+        return () => setFeedBack(null);
+    }, [searchedValue]);
 
     const makeFeedBackMessage = (value) => `You searched for: ${value}`;
 
     const handleSearch = () => {
-        if(inputValue) setFeedBack(makeFeedBackMessage(inputValue));
         searchMethod(inputValue);
         setSearchedValue(inputValue);
     }
@@ -58,7 +60,6 @@ function SearchForm({ searchMethod, searchSuggestions }) {
         setSearchedValue(value.toLowerCase());
         setInputValue(value);
         setShowSuggestions(false);
-        setFeedBack(makeFeedBackMessage(value));
     }
 
     const handleSelectedSuggestion = (keyCode) => {
@@ -79,7 +80,7 @@ function SearchForm({ searchMethod, searchSuggestions }) {
         <div className="searchform">
             <div className="searchform__inner">
                 <div className="searchform__input-wrap">
-                    <TextField value={inputValue} onKeyDown={handleKeyPress} onChange={handleInputChange} placeholder="Enter pokemon name" />
+                    <TextField value={inputValue} onKeyDown={handleKeyPress} onChange={(e) => setInputValue(e.target.value)} placeholder="Enter pokemon name" />
                     {showSuggestions ? <SearchFormSuggestions submitMethod={handleSearchSuggestionClick} suggestions={activeSuggestions} selectedSuggestion={selectedSuggestion} /> : null}
                 </div>
                 <Button className='searchform__button' raised onClick={handleSearch}>Search</Button>
